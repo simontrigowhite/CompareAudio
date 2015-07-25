@@ -18,7 +18,7 @@ namespace CompareAudio
         private void Form1_Load(object sender, EventArgs e)
         {
             this.player = new Player(this.chart1);
-            this.player.SetChart("c:\\Users\\Simon\\Desktop\\3 2 5.5.wav");
+            this.player.SetFile("c:\\Users\\Simon\\Desktop\\3 2 5.5.wav");
         }
 
         private void OpenWaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -27,12 +27,12 @@ namespace CompareAudio
             if (open.ShowDialog() != DialogResult.OK)
                 return;
 
-            this.player.SetChart(open.FileName);
+            this.player.SetFile(open.FileName);
         }
 
         private void ShowPositionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(this.player.PositionMillions() + " million");
+            MessageBox.Show(this.player.PositionInMillions() + " million");
         }
     }
 }

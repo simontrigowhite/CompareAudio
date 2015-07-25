@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -17,46 +13,41 @@ namespace CompareAudio
             this.Chart = chart;
         }
 
+
+        // Properties and fields
+
         public IWavePlayer WaveOutDevice { get; private set; }
         public WaveFileReader Reader { get; private set; }
         public Chart Chart { get; private set; }
 
-        const int million = 1000000;
+        private const int Million = 1000000;
 
 
-        public void SetReader(string file)
-        {
-            this.Reader = new WaveFileReader(file);
-        }
+        // Public methods
 
-        public void SetWaveOutDevice()
-        {
-            this.WaveOutDevice = new WaveOut();
-        }
-
-        public void SetChart(string file)
+        public void SetFile(string file)
         {
             if (this.WaveOutDevice != null)
                 this.WaveOutDevice.Stop();
 
-            this.SetReader(file);
+            this.Reader = new WaveFileReader(file);
 
             this.ShowChart();
 
-            this.PlayWave(10 * million);
+            this.PlayWave(10 * Million);
         }
 
-        public string PositionMillions()
+        public string PositionInMillions()
         {
-            long position = this.Reader.Position;
-
-            string positionMillions = (Convert.ToSingle(position) / Convert.ToSingle(million)).ToString();
-            return positionMillions;
+            return (Convert.ToSingle(this.Reader.Position) / Convert.ToSingle(Million)).ToString();
         }
+
+
+        // Non-public methods
 
         private void PlayWave(long position)
         {
-            this.SetWaveOutDevice();
+            this.WaveOutDevice = new WaveOut();
 
             this.Reader.Position = position;
 
