@@ -19,10 +19,16 @@ namespace CompareAudio
             InitializeComponent();
         }
 
+        string file = "c:\\Users\\Simon\\Desktop\\3 2 5.5.wav";
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            //this.PlayFile();
+            this.ShowFile();
+        }
 
-            //Declarations required for audio out and the MP3 stream
+        private void PlayFile()
+        {
             IWavePlayer waveOutDevice;
             AudioFileReader audioFileReader;
 
@@ -30,8 +36,7 @@ namespace CompareAudio
 
             try
             {
-
-                audioFileReader = new AudioFileReader("c:\\Users\\Simon\\Desktop\\3 2 5.5.wav");
+                audioFileReader = new AudioFileReader(this.file);
 
                 waveOutDevice.Init(audioFileReader);
                 waveOutDevice.Play();
@@ -40,8 +45,23 @@ namespace CompareAudio
             {
                 MessageBox.Show("error " + ee.Message);
             }
+        }
 
+        private void openWaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ShowFile();
+        }
 
+        private void ShowFile()
+        {
+            //OpenFileDialog open = new OpenFileDialog();
+            //open.Filter = "Wave file (*.wav)|*.wav";
+            //if (open.ShowDialog() != DialogResult.OK) 
+            //    return;
+
+            this.waveViewer1.SamplesPerPixel = 4000;
+
+            this.waveViewer1.WaveStream = new NAudio.Wave.WaveFileReader(this.file);
         }
     }
 }
