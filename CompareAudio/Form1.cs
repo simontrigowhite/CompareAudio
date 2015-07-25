@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 using NAudio.Wave;
 
@@ -59,9 +60,30 @@ namespace CompareAudio
             //if (open.ShowDialog() != DialogResult.OK) 
             //    return;
 
-            this.waveViewer1.SamplesPerPixel = 4000;
+            Series series = chart1.Series.Add("wave");
+            series.ChartType = SeriesChartType.FastLine;
+            series.ChartArea = "ChartArea1";
 
-            this.waveViewer1.WaveStream = new NAudio.Wave.WaveFileReader(this.file);
+            NAudio.Wave.WaveChannel32 wave = new WaveChannel32(new NAudio.Wave.WaveFileReader(file));
+
+            int read = 0;
+            while (wave.Position < wave.Length)
+            {
+                byte[] buffer = new byte[4096];
+                read = wave.Read(buffer, 0, 4096);
+
+                double max = -1;
+
+                for (int i = 0; i < read / 4; i++)
+                {
+                    double x = BitConverter.ToSingle(buffer, i * 4);
+                    if (x > max)
+                        max = x;
+                }
+                series.Points.Add(max);
+            }
+
+
         }
     }
 }
