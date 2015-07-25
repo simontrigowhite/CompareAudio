@@ -13,7 +13,11 @@ namespace CompareAudio
             this.InitializeComponent();
         }
 
+        const int million = 1000000;
+
         private IWavePlayer waveOutDevice;
+
+        private WaveFileReader reader;
 
 
         // Form events
@@ -32,6 +36,15 @@ namespace CompareAudio
             this.ShowFile(open.FileName);
         }
 
+        private void showPositionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            long position = this.reader.Position;
+
+            string positionMillions = (Convert.ToSingle(position) / Convert.ToSingle(million)).ToString();
+            MessageBox.Show(positionMillions + " million");
+        }
+
 
         // Non-public methods
 
@@ -40,18 +53,18 @@ namespace CompareAudio
             if (this.waveOutDevice != null)
                 this.waveOutDevice.Stop();
 
-            WaveFileReader reader = new WaveFileReader(file);
+            this.reader = new WaveFileReader(file);
 
-            this.ShowChart(reader);
+            this.ShowChart();
 
-            this.PlayWave(reader);
+            this.PlayWave(10 * million);
         }
 
-        private void PlayWave(WaveFileReader reader)
+        private void PlayWave(long position)
         {
             this.waveOutDevice = new WaveOut();
 
-            reader.Position = 0;
+            this.reader.Position = position;
 
             try
             {
@@ -64,7 +77,7 @@ namespace CompareAudio
             }
         }
 
-        private void ShowChart(WaveFileReader reader)
+        private void ShowChart()
         {
             this.chart1.Series.RemoveAt(0);
 

@@ -34,6 +34,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.showPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
@@ -51,7 +52,8 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openWaveToolStripMenuItem});
+            this.openWaveToolStripMenuItem,
+            this.showPositionToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 39);
             this.fileToolStripMenuItem.Text = "File";
@@ -59,7 +61,7 @@
             // openWaveToolStripMenuItem
             // 
             this.openWaveToolStripMenuItem.Name = "openWaveToolStripMenuItem";
-            this.openWaveToolStripMenuItem.Size = new System.Drawing.Size(241, 40);
+            this.openWaveToolStripMenuItem.Size = new System.Drawing.Size(247, 40);
             this.openWaveToolStripMenuItem.Text = "Open Wave ...";
             this.openWaveToolStripMenuItem.Click += new System.EventHandler(this.OpenWaveToolStripMenuItem_Click);
             // 
@@ -76,6 +78,13 @@
             this.chart1.Size = new System.Drawing.Size(651, 446);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
+            // 
+            // showPositionToolStripMenuItem
+            // 
+            this.showPositionToolStripMenuItem.Name = "showPositionToolStripMenuItem";
+            this.showPositionToolStripMenuItem.Size = new System.Drawing.Size(247, 40);
+            this.showPositionToolStripMenuItem.Text = "Show position";
+            this.showPositionToolStripMenuItem.Click += new System.EventHandler(this.showPositionToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -102,6 +111,7 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWaveToolStripMenuItem;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.ToolStripMenuItem showPositionToolStripMenuItem;
     }
 }
 
