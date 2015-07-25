@@ -33,7 +33,10 @@ namespace CompareAudio
             this.Reader = new WaveFileReader(file);
 
             this.ShowChart();
+        }
 
+        public void Play(int positionInMillions = 10)
+        {
             this.PlayWave(10 * Million);
         }
 
