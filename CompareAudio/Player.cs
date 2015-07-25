@@ -30,57 +30,19 @@ namespace CompareAudio
 
         public void SetFile(string file)
         {
-            //if (this.WaveOutDevice != null)
-            //    this.WaveOutDevice.Stop();
-
-            //this.WaveOutDevice = new WaveOut();
-
             this.File = file;
             this.Reader = new WaveFileReader(file);
             this.ShowChart();
             this.FileLabel.Text = file;
         }
 
-        //public void Play(float volume = 1, int positionInMillions = 10)
-        //{
-        //    this.Volume = volume;
-        //    this.WaveOutDevice.Volume = volume;
-
-        //    this.PlayWave(10 * Million);
-        //}
-
         public string PositionInMillions()
         {
             return (Convert.ToSingle(this.Reader.Position) / Convert.ToSingle(Million)).ToString();
         }
 
-        //public void Mute()
-        //{
-        //    this.WaveOutDevice.Volume = 0;
-        //}
-
-        //public void Unmute()
-        //{
-        //    this.WaveOutDevice.Volume = this.Volume;
-        //}
-
 
         // Non-public methods
-
-        //private void PlayWave(long position)
-        //{
-        //    this.Reader.Position = position;
-
-        //    try
-        //    {
-        //        this.WaveOutDevice.Init(this.Reader);
-        //        this.WaveOutDevice.Play();
-        //    }
-        //    catch (Exception ee)
-        //    {
-        //        MessageBox.Show("error " + ee.Message);
-        //    }
-        //}
 
         private void ShowChart()
         {

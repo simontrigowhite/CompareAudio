@@ -15,39 +15,9 @@ namespace CompareAudio
         private Player player1;
         private Player player2;
 
-        public IWavePlayer WaveOutDevice { get; private set; }
+        private IWavePlayer WaveOutDevice { get; set; }
 
 
-        public void Play(Player player, float volume = 1, int positionInMillions = 10)
-        {
-            player.Volume = volume;
-            this.WaveOutDevice.Volume = volume;
-
-            this.PlayWave(player, 10 * player.Million);
-        }
-
-        private void PlayWave(Player player, long position)
-        {
-            player.Reader.Position = position;
-
-            if (this.WaveOutDevice != null)
-                this.WaveOutDevice.Stop();
-
-            this.WaveOutDevice = new WaveOut();
-
-            try
-            {
-                this.WaveOutDevice.Init(player.Reader);
-                this.label1.Text = player.File;
-                this.WaveOutDevice.Play();
-            }
-            catch (Exception ee)
-            {
-                MessageBox.Show("error " + ee.Message);
-            }
-        }
-        
-        
         // Form events
 
         private void Form1_Load(object sender, EventArgs e)
@@ -63,7 +33,6 @@ namespace CompareAudio
             this.Play(this.player1);
             this.Mute1Button.Text = "Mute";
             this.Mute2Button.Text = "Unmute";
-            //this.Play(this.player2);
         }
 
         private void OpenWaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -114,6 +83,38 @@ namespace CompareAudio
                 this.Play(this.player2);
                 this.Mute1Button.Text = "Unmute";
                 this.Mute2Button.Text = "Mute";
+            }
+        }
+
+
+        // Non-public methods
+
+        private void Play(Player player, float volume = 1, int positionInMillions = 10)
+        {
+            player.Volume = volume;
+            this.WaveOutDevice.Volume = volume;
+
+            this.PlayWave(player, 10 * player.Million);
+        }
+
+        private void PlayWave(Player player, long position)
+        {
+            player.Reader.Position = position;
+
+            if (this.WaveOutDevice != null)
+                this.WaveOutDevice.Stop();
+
+            this.WaveOutDevice = new WaveOut();
+
+            try
+            {
+                this.WaveOutDevice.Init(player.Reader);
+                this.label1.Text = player.File;
+                this.WaveOutDevice.Play();
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("error " + ee.Message);
             }
         }
     }
