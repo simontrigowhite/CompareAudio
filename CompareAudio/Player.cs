@@ -11,6 +11,7 @@ namespace CompareAudio
         public Player(Chart chart)
         {
             this.Chart = chart;
+            this.WaveOutDevice = new WaveOut();
         }
 
 
@@ -20,6 +21,7 @@ namespace CompareAudio
         public WaveFileReader Reader { get; private set; }
         public Chart Chart { get; private set; }
 
+        public float Volume { get; private set; }
         private const int Million = 1000000;
 
 
@@ -30,13 +32,17 @@ namespace CompareAudio
             if (this.WaveOutDevice != null)
                 this.WaveOutDevice.Stop();
 
-            this.Reader = new WaveFileReader(file);
+            this.WaveOutDevice = new WaveOut();
 
+            this.Reader = new WaveFileReader(file);
             this.ShowChart();
         }
 
-        public void Play(int positionInMillions = 10)
+        public void Play(float volume = 1, int positionInMillions = 10)
         {
+            this.Volume = volume;
+            this.WaveOutDevice.Volume = volume;
+
             this.PlayWave(10 * Million);
         }
 
@@ -45,13 +51,21 @@ namespace CompareAudio
             return (Convert.ToSingle(this.Reader.Position) / Convert.ToSingle(Million)).ToString();
         }
 
+        public void Mute()
+        {
+            this.WaveOutDevice.Volume = 0;
+        }
+
+        public void Unmute()
+        {
+            this.WaveOutDevice.Volume = this.Volume;
+        }
+
 
         // Non-public methods
 
         private void PlayWave(long position)
         {
-            this.WaveOutDevice = new WaveOut();
-
             this.Reader.Position = position;
 
             try

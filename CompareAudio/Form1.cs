@@ -46,5 +46,33 @@ namespace CompareAudio
             MessageBox.Show(this.player1.PositionInMillions() + " million\n"
                             + this.player2.PositionInMillions() + " million");
         }
+
+        private void Mute1Button_Click(object sender, EventArgs e)
+        {
+            if (this.Mute1Button.Text == "Mute")
+            {
+                this.player1.Mute();
+                this.Mute1Button.Text = "Unmute";
+            }
+            else
+            {
+                this.player1.Unmute();
+                this.Mute1Button.Text = "Mute";
+            }
+        }
+
+        private void Mute2Button_Click(object sender, EventArgs e)
+        {
+            if (this.Mute2Button.Text == "Mute")
+            {
+                this.player2.Mute();
+                this.Mute2Button.Text = "Unmute";
+            }
+            else
+            {
+                this.player2.Unmute();
+                this.Mute2Button.Text = "Mute";
+            }
+        }
     }
 }
