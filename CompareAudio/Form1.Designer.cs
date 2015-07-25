@@ -61,7 +61,7 @@
             this.openWaveToolStripMenuItem.Name = "openWaveToolStripMenuItem";
             this.openWaveToolStripMenuItem.Size = new System.Drawing.Size(241, 40);
             this.openWaveToolStripMenuItem.Text = "Open Wave ...";
-            this.openWaveToolStripMenuItem.Click += new System.EventHandler(this.openWaveToolStripMenuItem_Click);
+            this.openWaveToolStripMenuItem.Click += new System.EventHandler(this.OpenWaveToolStripMenuItem_Click);
             // 
             // chart1
             // 

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -17,50 +10,53 @@ namespace CompareAudio
     {
         public Form1()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
-        string file = "c:\\Users\\Simon\\Desktop\\3 2 5.5.wav";
-        IWavePlayer waveOutDevice;
+        private IWavePlayer waveOutDevice;
+
+
+        // Form events
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.ShowFile();
+            this.ShowFile("c:\\Users\\Simon\\Desktop\\3 2 5.5.wav");
         }
 
-        private void openWaveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenWaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog open = new OpenFileDialog();
-            open.Filter = "Wave file (*.wav)|*.wav";
+            OpenFileDialog open = new OpenFileDialog { Filter = "Wave file (*.wav)|*.wav" };
             if (open.ShowDialog() != DialogResult.OK)
                 return;
-            this.file = open.FileName;
-            this.ShowFile();
+
+            this.ShowFile(open.FileName);
         }
 
-        private void ShowFile()
-        {
 
+        // Non-public methods
+
+        private void ShowFile(string file)
+        {
             if (this.waveOutDevice != null)
                 this.waveOutDevice.Stop();
 
-            WaveFileReader reader = new NAudio.Wave.WaveFileReader(file);
+            WaveFileReader reader = new WaveFileReader(file);
 
             this.ShowChart(reader);
 
-            PlayWave(reader);
+            this.PlayWave(reader);
         }
 
         private void PlayWave(WaveFileReader reader)
         {
-            waveOutDevice = new WaveOut();
+            this.waveOutDevice = new WaveOut();
 
             reader.Position = 0;
 
             try
             {
-                waveOutDevice.Init(reader);
-                waveOutDevice.Play();
+                this.waveOutDevice.Init(reader);
+                this.waveOutDevice.Play();
             }
             catch (Exception ee)
             {
@@ -76,24 +72,34 @@ namespace CompareAudio
             series.ChartType = SeriesChartType.FastLine;
             series.ChartArea = "ChartArea1";
 
-            NAudio.Wave.WaveChannel32 wave = new WaveChannel32(reader);
+            WaveChannel32 wave = new WaveChannel32(reader);
 
-            int read = 0;
             while (wave.Position < wave.Length)
             {
                 int bytes = 100000;
                 byte[] buffer = new byte[bytes];
-                read = wave.Read(buffer, 0, bytes);
+
+                int read = wave.Read(buffer, 0, bytes);
 
                 double total = 0;
                 int count = 0;
+                double average = 0;
 
                 for (int i = 0; i < read / 4; i++)
                 {
                     double x = BitConverter.ToSingle(buffer, i * 4);
 
+                    double z = average * count;
+
+                    double diff = Math.Abs(z - total);
+
+                    if (diff > 0.00001)
+                        throw new Exception("no");
+                            
                     total += x;
                     count += 1;
+
+                    average = (z + x) / count;
                 }
                 series.Points.Add(total / Convert.ToDouble(count));
             }
