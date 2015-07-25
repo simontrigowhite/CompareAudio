@@ -21,25 +21,45 @@ namespace CompareAudio
         }
 
         string file = "c:\\Users\\Simon\\Desktop\\3 2 5.5.wav";
+        IWavePlayer waveOutDevice;
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //this.PlayFile();
             this.ShowFile();
         }
 
-        private void PlayFile()
+        private void openWaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            IWavePlayer waveOutDevice;
-            AudioFileReader audioFileReader;
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "Wave file (*.wav)|*.wav";
+            if (open.ShowDialog() != DialogResult.OK)
+                return;
+            this.file = open.FileName;
+            this.ShowFile();
+        }
 
+        private void ShowFile()
+        {
+
+            if (this.waveOutDevice != null)
+                this.waveOutDevice.Stop();
+
+            WaveFileReader reader = new NAudio.Wave.WaveFileReader(file);
+
+            this.ShowChart(reader);
+
+            PlayWave(reader);
+        }
+
+        private void PlayWave(WaveFileReader reader)
+        {
             waveOutDevice = new WaveOut();
+
+            reader.Position = 0;
 
             try
             {
-                audioFileReader = new AudioFileReader(this.file);
-
-                waveOutDevice.Init(audioFileReader);
+                waveOutDevice.Init(reader);
                 waveOutDevice.Play();
             }
             catch (Exception ee)
@@ -48,23 +68,14 @@ namespace CompareAudio
             }
         }
 
-        private void openWaveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowChart(WaveFileReader reader)
         {
-            this.ShowFile();
-        }
+            this.chart1.Series.RemoveAt(0);
 
-        private void ShowFile()
-        {
-            //OpenFileDialog open = new OpenFileDialog();
-            //open.Filter = "Wave file (*.wav)|*.wav";
-            //if (open.ShowDialog() != DialogResult.OK) 
-            //    return;
-
-            Series series = chart1.Series.Add("wave");
+            Series series = this.chart1.Series.Add("wave");
             series.ChartType = SeriesChartType.FastLine;
             series.ChartArea = "ChartArea1";
 
-            WaveFileReader reader = new NAudio.Wave.WaveFileReader(file);
             NAudio.Wave.WaveChannel32 wave = new WaveChannel32(reader);
 
             int read = 0;
@@ -86,22 +97,6 @@ namespace CompareAudio
                 }
                 series.Points.Add(total / Convert.ToDouble(count));
             }
-
-            IWavePlayer waveOutDevice;
-            waveOutDevice = new WaveOut();
-
-            reader.Position = 0;
-
-            try
-            {
-                waveOutDevice.Init(reader);
-                waveOutDevice.Play();
-            }
-            catch (Exception ee)
-            { 
-                MessageBox.Show("error " + ee.Message);
-            }
-
         }
     }
 }
