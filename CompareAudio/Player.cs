@@ -8,76 +8,79 @@ namespace CompareAudio
 {
     public class Player
     {
-        public Player(Chart chart)
+        public Player(Chart chart, Label fileLabel)
         {
             this.Chart = chart;
-            this.WaveOutDevice = new WaveOut();
+            this.FileLabel = fileLabel;
         }
 
 
         // Properties and fields
 
-        public IWavePlayer WaveOutDevice { get; private set; }
+        public string File { get; private set; }
         public WaveFileReader Reader { get; private set; }
         public Chart Chart { get; private set; }
+        public Label FileLabel { get; private set; }
 
-        public float Volume { get; private set; }
-        private const int Million = 1000000;
+        public float Volume { get; set; }
+        public int Million = 1000000;
 
 
         // Public methods
 
         public void SetFile(string file)
         {
-            if (this.WaveOutDevice != null)
-                this.WaveOutDevice.Stop();
+            //if (this.WaveOutDevice != null)
+            //    this.WaveOutDevice.Stop();
 
-            this.WaveOutDevice = new WaveOut();
+            //this.WaveOutDevice = new WaveOut();
 
+            this.File = file;
             this.Reader = new WaveFileReader(file);
             this.ShowChart();
+            this.FileLabel.Text = file;
         }
 
-        public void Play(float volume = 1, int positionInMillions = 10)
-        {
-            this.Volume = volume;
-            this.WaveOutDevice.Volume = volume;
+        //public void Play(float volume = 1, int positionInMillions = 10)
+        //{
+        //    this.Volume = volume;
+        //    this.WaveOutDevice.Volume = volume;
 
-            this.PlayWave(10 * Million);
-        }
+        //    this.PlayWave(10 * Million);
+        //}
 
         public string PositionInMillions()
         {
             return (Convert.ToSingle(this.Reader.Position) / Convert.ToSingle(Million)).ToString();
         }
 
-        public void Mute()
-        {
-            this.WaveOutDevice.Volume = 0;
-        }
+        //public void Mute()
+        //{
+        //    this.WaveOutDevice.Volume = 0;
+        //}
 
-        public void Unmute()
-        {
-            this.WaveOutDevice.Volume = this.Volume;
-        }
+        //public void Unmute()
+        //{
+        //    this.WaveOutDevice.Volume = this.Volume;
+        //}
 
 
         // Non-public methods
 
-        private void PlayWave(long position)
-        {
-            this.Reader.Position = position;
+        //private void PlayWave(long position)
+        //{
+        //    this.Reader.Position = position;
 
-            try
-            {
-                this.WaveOutDevice.Init(this.Reader);
-                this.WaveOutDevice.Play();
-            }
-            catch (Exception ee)
-            {
-                MessageBox.Show("error " + ee.Message);
-            }
-        }
+        //    try
+        //    {
+        //        this.WaveOutDevice.Init(this.Reader);
+        //        this.WaveOutDevice.Play();
+        //    }
+        //    catch (Exception ee)
+        //    {
+        //        MessageBox.Show("error " + ee.Message);
+        //    }
+        //}
 
         private void ShowChart()
         {

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using NAudio.Wave;
+
 namespace CompareAudio
 {
     public partial class Form1 : Form
@@ -13,19 +15,55 @@ namespace CompareAudio
         private Player player1;
         private Player player2;
 
+        public IWavePlayer WaveOutDevice { get; private set; }
 
+
+        public void Play(Player player, float volume = 1, int positionInMillions = 10)
+        {
+            player.Volume = volume;
+            this.WaveOutDevice.Volume = volume;
+
+            this.PlayWave(player, 10 * player.Million);
+        }
+
+        private void PlayWave(Player player, long position)
+        {
+            player.Reader.Position = position;
+
+            if (this.WaveOutDevice != null)
+                this.WaveOutDevice.Stop();
+
+            this.WaveOutDevice = new WaveOut();
+
+            try
+            {
+                this.WaveOutDevice.Init(player.Reader);
+                this.label1.Text = player.File;
+                this.WaveOutDevice.Play();
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show("error " + ee.Message);
+            }
+        }
+        
+        
         // Form events
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.player1 = new Player(this.chart1);
+            this.WaveOutDevice = new WaveOut();
+
+            this.player1 = new Player(this.chart1, this.File1Label);
             this.player1.SetFile("c:\\Users\\Simon\\Desktop\\3 2 5.5.wav");
 
-            this.player2 = new Player(this.chart2);
-            this.player2.SetFile("c:\\Users\\Simon\\Desktop\\3 2 5.5.wav");
+            this.player2 = new Player(this.chart2, this.File2Label);
+            this.player2.SetFile("c:\\Users\\Simon\\Desktop\\Simon2.wav");
 
-            this.player1.Play();
-            this.player2.Play();
+            this.Play(this.player1);
+            this.Mute1Button.Text = "Mute";
+            this.Mute2Button.Text = "Unmute";
+            //this.Play(this.player2);
         }
 
         private void OpenWaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -37,8 +75,8 @@ namespace CompareAudio
             this.player1.SetFile(open.FileName);
             this.player2.SetFile(open.FileName);
 
-            this.player1.Play();
-            this.player2.Play();
+            this.Play(this.player1);
+            this.Play(this.player2);
         }
 
         private void ShowPositionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -51,13 +89,15 @@ namespace CompareAudio
         {
             if (this.Mute1Button.Text == "Mute")
             {
-                this.player1.Mute();
+                this.Play(this.player2);
                 this.Mute1Button.Text = "Unmute";
+                this.Mute2Button.Text = "Mute";
             }
             else
             {
-                this.player1.Unmute();
+                this.Play(this.player1);
                 this.Mute1Button.Text = "Mute";
+                this.Mute2Button.Text = "Unmute";
             }
         }
 
@@ -65,12 +105,14 @@ namespace CompareAudio
         {
             if (this.Mute2Button.Text == "Mute")
             {
-                this.player2.Mute();
+                this.Play(this.player1);
+                this.Mute1Button.Text = "Mute";
                 this.Mute2Button.Text = "Unmute";
             }
             else
             {
-                this.player2.Unmute();
+                this.Play(this.player2);
+                this.Mute1Button.Text = "Unmute";
                 this.Mute2Button.Text = "Mute";
             }
         }
