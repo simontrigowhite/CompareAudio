@@ -64,25 +64,43 @@ namespace CompareAudio
             series.ChartType = SeriesChartType.FastLine;
             series.ChartArea = "ChartArea1";
 
-            NAudio.Wave.WaveChannel32 wave = new WaveChannel32(new NAudio.Wave.WaveFileReader(file));
+            WaveFileReader reader = new NAudio.Wave.WaveFileReader(file);
+            NAudio.Wave.WaveChannel32 wave = new WaveChannel32(reader);
 
             int read = 0;
             while (wave.Position < wave.Length)
             {
-                byte[] buffer = new byte[4096];
-                read = wave.Read(buffer, 0, 4096);
+                int bytes = 100000;
+                byte[] buffer = new byte[bytes];
+                read = wave.Read(buffer, 0, bytes);
 
-                double max = -1;
+                double total = 0;
+                int count = 0;
 
                 for (int i = 0; i < read / 4; i++)
                 {
                     double x = BitConverter.ToSingle(buffer, i * 4);
-                    if (x > max)
-                        max = x;
+
+                    total += x;
+                    count += 1;
                 }
-                series.Points.Add(max);
+                series.Points.Add(total / Convert.ToDouble(count));
             }
 
+            IWavePlayer waveOutDevice;
+            waveOutDevice = new WaveOut();
+
+            reader.Position = 0;
+
+            try
+            {
+                waveOutDevice.Init(reader);
+                waveOutDevice.Play();
+            }
+            catch (Exception ee)
+            { 
+                MessageBox.Show("error " + ee.Message);
+            }
 
         }
     }
